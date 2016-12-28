@@ -2,6 +2,7 @@ import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import functions
+import time
 class post_thread(QThread):
     signal = pyqtSignal(int,str)
     def __init__(self,parent=None,session=None,dic=None):
@@ -21,10 +22,11 @@ class post_thread(QThread):
                 self.signal.emit(state,target)
                 break
 class Booking(QDialog):
-    def __init__(self,parent=None,session=None):
+    def __init__(self,parent=None,session=None,id=None):
         super(Booking,self).__init__(parent)
         #functions.common_ui(self,100,500,300,250)
         self.session=session
+        self.id=id
 
         self.layout = QVBoxLayout()
         self.DateLine = QLineEdit()
@@ -82,8 +84,10 @@ class Booking(QDialog):
         self.layout.addWidget(self.info_lable)
         self.setLayout(self.layout)
         functions.common_ui(self, 100, 500, 300, 250)
-        self.thread_flag=False
+        self.load_used_seat()
+        self.DateLine.setText(time.strftime("%Y-%m-%d")[:-2])
         self.connect(self.confirm_button,SIGNAL('clicked()'),self.post)
+        self.connect(self.confirm_button,SIGNAL("clicked()"),self.save_used_seat)
     def post(self):
         self.confirm_button.setDisabled(True)
         dic={'date':self.DateLine.text(),"seat":self.SeatLine.text(),"start":self.StartLine.text(),'end':self.EndLine.text()}
@@ -97,3 +101,21 @@ class Booking(QDialog):
         else:
             self.info_lable.setText(target+'正在循环')
         self.confirm_button.setDisabled(False)
+    def load_used_seat(self):
+        f=open("used_seat","r")
+        self.used_seat=eval(f.read())
+        if(self.id in self.used_seat):
+            self.SeatLine.setText(self.used_seat[self.id]['seat'])
+            self.StartLine.setText(self.used_seat[self.id]['start'])
+            self.EndLine.setText(self.used_seat[self.id]['end'])
+        f.close()
+    def save_used_seat(self):
+        f=open("used_seat",'w')
+        if(self.id in self.used_seat):
+            self.used_seat[self.id]["seat"]=self.SeatLine.text()
+            self.used_seat[self.id]["start"] = self.StartLine.text()
+            self.used_seat[self.id]["end"] = self.EndLine.text()
+        else:
+            self.used_seat[self.id]={"seat":self.SeatLine.text(),"start":self.StartLine.text(),"end":self.EndLine.text()}
+        f.write(str(self.used_seat))
+        f.close()

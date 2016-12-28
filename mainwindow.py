@@ -91,7 +91,7 @@ class MainWindow(QDialog):
             f=open('info','w')
             f.write(str(dic))
             f.close()
-            self.booking=booking.Booking(self,self.session)
+            self.booking=booking.Booking(self,self.session,self.AccountLine.text())
             self.booking.show()
             self.hide()
         else:
