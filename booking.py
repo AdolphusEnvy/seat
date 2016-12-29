@@ -2,7 +2,7 @@ import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import functions
-import time
+import datetime
 class post_thread(QThread):
     signal = pyqtSignal(int,str)
     def __init__(self,parent=None,session=None,dic=None):
@@ -29,7 +29,8 @@ class Booking(QDialog):
         self.id=id
 
         self.layout = QVBoxLayout()
-        self.DateLine = QLineEdit()
+        self.DateLine =QComboBox()
+        self.DateLine.addItems([datetime.date.today().strftime("%Y-%m-%d"),(datetime.date.today()+datetime.timedelta(days=1)).strftime("%Y-%m-%d")])
         self.DateLine.setFixedHeight(27)
         self.DateLine.setFixedWidth(200)
         self.Date_lable = QLabel("时间")
@@ -85,12 +86,13 @@ class Booking(QDialog):
         self.setLayout(self.layout)
         functions.common_ui(self, 100, 500, 300, 250)
         self.load_used_seat()
-        self.DateLine.setText(time.strftime("%Y-%m-%d")[:-2])
+        #self.DateLine.setText(time.strftime("%Y-%m-%d")[:-2])
         self.connect(self.confirm_button,SIGNAL('clicked()'),self.post)
         self.connect(self.confirm_button,SIGNAL("clicked()"),self.save_used_seat)
     def post(self):
         self.confirm_button.setDisabled(True)
-        dic={'date':self.DateLine.text(),"seat":self.SeatLine.text(),"start":self.StartLine.text(),'end':self.EndLine.text()}
+        dic={'date':self.DateLine.currentText(),"seat":self.SeatLine.text(),"start":self.StartLine.text(),'end':self.EndLine.text()}
+        print(dic)
         self.PostThread=post_thread(self,session=self.session,dic=dic)
         self.PostThread.signal.connect(self.info)
         #self.connect(self.PostThread.signal,SIGNAL('signal(int,str)'),self.info)
