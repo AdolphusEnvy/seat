@@ -2,7 +2,7 @@
 ##test tricking on WHU library seat booking system\n
 ##数据格式：
 ##座位：chrome审核元素查看座位号
-##日期：YYYY-MM-DD形式输入
+##日期：在组合框中选中要选座位
 ##时间：从0点起计算的分钟数 如8:30--8*60+30=510 17:00--17*60=1020
 ##环境：Python 3.5.2 |Anaconda 4.0.0 (64-bit)
 ##库：requests、pyqt4
