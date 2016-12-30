@@ -8,6 +8,6 @@
 ##库：requests、pyqt4
 ##打包工具：pyinstaller
 ##打包文件：
-##http://pan.baidu.com/s/1c2aHEsK
+##http://pan.baidu.com/s/1cFxuH4
 ##使用方法:点击开始后，下方会提示结果，如果没有抢成功，将会提示失败原因，并在后台循环发送数据，直至成功
 ##所以，应当在22点后将其打开并启动提交，放置一边即可，等待其自动完成抢座
